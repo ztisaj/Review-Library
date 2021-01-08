@@ -1,14 +1,17 @@
+//add button listener
 const addButton = document.querySelector('#add-button');
 addButton.addEventListener('click', addReview);
 
+//review constructor
 class Review {
   constructor (title, comment, stars) {
     this.title = form.title.value;
     this.comment = form.comment.value;
-    this.stars = parseInt(form.stars.value);
+    this.stars = form.stars.value;
   }
 }
 
+//create review
 let myReview = [];
 let newReview;
 
@@ -17,7 +20,7 @@ function addReview() {
   event.preventDefault();
 
   newReview = new Review(title, comment, stars);
-  if(newReview.title!='' && newReview.stars<6 && newReview.stars>0){
+  if(newReview.title!='' && newReview.stars<=5 && newReview.stars>=1){
     myReview.push(newReview);
     setData();
     render();
@@ -39,6 +42,7 @@ function render() {
 
 }
 
+//creating elements for review
 function createReview(item) {
 
   const reviewList = document.querySelector('#review-list');
@@ -47,7 +51,7 @@ function createReview(item) {
   const titleDiv = document.createElement('p');
   const commentDiv = document.createElement('p');
   const reviewStar = document.createElement('p');
-  const removeButton = document.createElement('button');
+  const removeButton = document.createElement('div');
 
   reviewDiv.classList.add('reviewData');
   reviewDiv.setAttribute('id', myReview.indexOf(item));
@@ -60,9 +64,12 @@ function createReview(item) {
   commentDiv.classList.add('comment');
   reviewDiv.appendChild(commentDiv);
 
+//adding stars
   reviewStar.classList.add('stars');
   let newArr=[];
-  for(let i=0; i<parseInt(item.stars); i++){
+  console.log(item.stars);
+  var numb = Math.round(item.stars);
+  for(let i=0; i<numb; i++){
     newArr.push('\u2605');
   }
   reviewStar.innerHTML = (newArr.join(' '));
@@ -81,6 +88,7 @@ function createReview(item) {
   });
 };
 
+//dark light mode toggle
 const dl = document.querySelector('#dl');
 const currentTheme = localStorage.getItem('theme');
 
@@ -98,15 +106,17 @@ dl.addEventListener('click',function(){
 });
 
 
+//storing in local storage
 function setData() {
     localStorage.setItem(`myReview`, JSON.stringify(myReview));
 }
 
+//pulls books from local storage when page is refreshed
 function restore() {
     if(!localStorage.myReview) {
         render();
     }else {
-        let objects = localStorage.getItem('myReview');
+        let objects = localStorage.getItem('myReview') // gets information from local storage to use in below loop to create DOM/display
         objects = JSON.parse(objects);
         myReview = objects;
         render();
